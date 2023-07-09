@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -14,6 +15,7 @@ class Post
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 100)]
     private ?string $title = null;
 
@@ -21,7 +23,7 @@ class Post
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $publication_date = null;
+    private ?\DateTIme $publication_date = null;
 
     #[ORM\Column]
     private ?int $category_id = null;
@@ -55,12 +57,12 @@ class Post
         return $this;
     }
 
-    public function getPublicationDate(): ?\DateTimeInterface
+    public function getPublicationDate(): ?\DateTIme
     {
         return $this->publication_date;
     }
 
-    public function setPublicationDate(\DateTimeInterface $publication_date): static
+    public function setPublicationDate(\DateTIme $publication_date): static
     {
         $this->publication_date = $publication_date;
 
