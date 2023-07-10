@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Post;
+use App\Entity\Category;
+use App\OptionsResolver\CategoryOptionsResolver;
 use App\OptionsResolver\PaginatorOptionsResolver;
 use App\OptionsResolver\PostOptionsResolver;
-use App\Repository\PostRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,14 +18,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route("/api", "api_", format: "json")]
-class PostController extends AbstractController
+class CategoryController extends AbstractController
 {
-    private PostRepository $postRepository;
+    private CategoryRepository $categoryRepository;
 
-    public function __construct(PostRepository $postRepository) {
-        $this->postRepository = $postRepository;
+    public function __construct(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
     }
-    #[Route('/post', name: 'post', methods: ["GET"])]
+
+    #[Route('/category', name: 'category', methods: ["GET"])]
     public function index(Request $request, PaginatorOptionsResolver $paginatorOptionsResolver): JsonResponse
     {
         try {
@@ -32,44 +35,37 @@ class PostController extends AbstractController
                 ->configurePage()
                 ->resolve($request->query->all());
 
-            $posts = $this->postRepository->findAllWithPagination($queryParams["page"]);
+            $posts = $this->categoryRepository->findAllWithPagination($queryParams["page"]);
             return $this->json($posts);
         } catch(\Exception $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
-
     }
 
-    #[Route("/post/{id}", "get_post", methods: ["GET"])]
+    #[Route("/category/{id}", "get_category", methods: ["GET"])]
     public function show($id): JsonResponse
     {
-        return $this->json($this->postRepository->find($id));
+        return $this->json($this->categoryRepository->find($id));
     }
 
-    #[Route("/post", "create_post", methods: ["POST"])]
-    public function store(Request $request, ValidatorInterface $validator, PostOptionsResolver $postOptionsResolver): JsonResponse
+    #[Route("/category", "create_category", methods: ["POST"])]
+    public function store(Request $request, ValidatorInterface $validator, CategoryOptionsResolver $categoryOptionsResolver): JsonResponse
     {
         try {
             $requestBody = json_decode($request->getContent(), true);
-            $fields = $postOptionsResolver->configureTitle(true)
-                ->configureTitle()
-                ->configureCategoryId()
-                ->configureContent()
+            $fields = $categoryOptionsResolver->configureName(true)
+                ->configureName()
                 ->resolve($requestBody);
 
-            $post = new Post();
-            $post->setTitle($fields["title"]);
-            $post->setContent($fields["content"]);
-            $post->setPublicationDate(new \DateTime('now'));
-            $post->setCategoryId($fields["category_id"]);
-
+            $post = new Category();
+            $post->setName($fields["name"]);
             // To validate the entity
             $errors = $validator->validate($post);
             if (count($errors) > 0) {
                 throw new InvalidArgumentException((string)$errors);
             }
 
-            $this->postRepository->save($post, true);
+            $this->categoryRepository->save($post, true);
 
             return $this->json($post, status: Response::HTTP_CREATED);
 
@@ -78,23 +74,18 @@ class PostController extends AbstractController
         }
     }
 
-    #[Route("/post/{id}", "update_post", methods: ["PATCH", "PUT"])]
-    public function update($id, Request $request, PostOptionsResolver $postOptionsResolver, ValidatorInterface $validator, EntityManagerInterface $em): JsonResponse
+    #[Route("/category/{id}", "update_category", methods: ["PATCH", "PUT"])]
+    public function update($id, Request $request, CategoryOptionsResolver $categoryOptionsResolver, ValidatorInterface $validator, EntityManagerInterface $em): JsonResponse
     {
         try {
             $requestBody = json_decode($request->getContent(), true);
 
-            $fields = $postOptionsResolver->configureTitle(true)
-                ->configureTitle()
-                ->configureCategoryId()
-                ->configureContent()
+            $fields = $categoryOptionsResolver->configureName(true)
+                ->configureName()
                 ->resolve($requestBody);
 
-            $post = $this->postRepository->find($id);
-            $post->setTitle($fields["title"]);
-            $post->setContent($fields["content"]);
-            $post->setPublicationDate(new \DateTime('now'));
-            $post->setCategoryId($fields["category_id"]);
+            $post = $this->categoryRepository->find($id);
+            $post->setName($fields["name"]);
 
             $errors = $validator->validate($post);
             if (count($errors) > 0) {
@@ -107,13 +98,5 @@ class PostController extends AbstractController
         } catch(\Exception $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
-    }
-
-    #[Route("/post/{id}", "delete_post", methods: ["DELETE"])]
-    public function delete($id)
-    {
-        $this->postRepository->remove($this->postRepository->find($id), true);
-
-        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 }

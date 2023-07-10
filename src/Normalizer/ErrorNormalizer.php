@@ -11,8 +11,7 @@ class ErrorNormalizer implements NormalizerInterface
     {
         return [
         'message' => $context['debug'] ? $exception->getMessage() : 'An error occured',
-        'status' => $exception->getStatusCode(),
-        'trace' => $context['debug'] ? $exception->getTrace() : [],
+        'status' => $exception->getStatusCode()
         ];
     }
 
