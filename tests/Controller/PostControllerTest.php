@@ -1,6 +1,4 @@
 <?php
-// tests/Controller/TodoControllerTest.php
-
 namespace App\Tests\Controller;
 
 use App\Entity\Post;
@@ -38,8 +36,8 @@ class PostControllerTest extends WebTestCase
         $this->assertIsArray($result["data"]);
 
         // Check the format of each element within the "data" field
-        foreach ($result["data"] as $todo) {
-            $this->testPostFormat($todo);
+        foreach ($result["data"] as $post) {
+            $this->testPostFormat($post);
         }
 
         // Perform the same operations for the "pagination" field
@@ -55,17 +53,17 @@ class PostControllerTest extends WebTestCase
     /**
      * Test the format of a post element
      */
-    private function testPostFormat(array $todoAsArray): void
+    private function testPostFormat(array $postAsArray): void
     {
         // Check the presence of each post fields
-        $todoKeys = ["id", "title", "content", "publicationDate","categoryId"];
-        foreach ($todoKeys as $key) {
-            $this->assertArrayHasKey($key, $todoAsArray);
+        $postKeys = ["id", "title", "content", "publicationDate","categoryId"];
+        foreach ($postKeys as $key) {
+            $this->assertArrayHasKey($key, $postAsArray);
         }
     }
 
     /**
-     * Test the GET /api/todos route
+     * Test the GET /api/post route
      */
     public function testGetPosts(): void
     {
@@ -101,11 +99,11 @@ class PostControllerTest extends WebTestCase
      */
     public function testGetPost(): void
     {
-        // Retrieve a todo from the database
-        $todo = $this->postRepository->findOneBy([]);
+        // Retrieve a post from the database
+        $post = $this->postRepository->findOneBy([]);
 
         // Make the request
-        $this->client->request('GET', "/api/post/{$todo->getId()}");
+        $this->client->request('GET', "/api/post/{$post->getId()}");
 
         // Check if it's successful
         $this->assertResponseIsSuccessful();
@@ -142,13 +140,13 @@ class PostControllerTest extends WebTestCase
     /**
      * Test the DELETE /api/post/{id} route
      */
-    public function testDeleteTodo(): void
+    public function testDeletePost(): void
     {
         // As for the previous method, we first make the request without the token header
-        $todo = $this->postRepository->findOneBy([]);
+        $post = $this->postRepository->findOneBy([]);
         $this->client->request(
             'DELETE',
-            "/api/post/{$todo->getId()}"
+            "/api/post/{$post->getId()}"
         );
 
         // Check if the request is successful
@@ -185,12 +183,12 @@ class PostControllerTest extends WebTestCase
      */
     public function testFullUpdate(): void
     {
-        $todo = $this->postRepository->findOneBy([]);
+        $post = $this->postRepository->findOneBy([]);
 
         // Missing parameter
 //        $this->client->request(
 //            'PUT',
-//            "/api/post/{$todo->getId()}",
+//            "/api/post/{post->getId()}",
 //            content: json_encode(["title" => "test","content" => "ultra mhalay"])
 //        );
 
@@ -199,7 +197,7 @@ class PostControllerTest extends WebTestCase
         // Valid request
         $this->client->request(
             'PUT',
-            "/api/post/{$todo->getId()}",
+            "/api/post/{$post->getId()}",
             content: json_encode(["title" => "test","content" => "ultra mhalay","category_id" => 1])
         );
 

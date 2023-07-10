@@ -1,6 +1,4 @@
 <?php
-// tests/OptionsResolver/TodoOptionsResolverTest.php
-
 namespace App\Tests\OptionsResolver;
 
 use App\OptionsResolver\PostOptionsResolver;

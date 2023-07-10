@@ -1,7 +1,5 @@
 <?php
 
-// src/OptionsResolver/TodoOptionsResolver .php
-
 namespace App\OptionsResolver;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;

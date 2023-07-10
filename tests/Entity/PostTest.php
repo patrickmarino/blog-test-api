@@ -1,7 +1,4 @@
 <?php
-
-// tests/Entity/TodoTest.php
-
 namespace App\Tests\Entity;
 
 use App\Entity\Post;
@@ -51,7 +48,7 @@ class PostTest extends KernelTestCase
 //        $this->assertInstanceOf(Length::class, $errors[0]->getConstraint());
 
         // Test the title setter and getter methods
-        $title = 'Test Todo';
+        $title = 'Test';
         $post->setTitle($title);
         $this->assertEquals($title, $post->getTitle());
     }

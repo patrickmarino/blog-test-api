@@ -1,7 +1,5 @@
 <?php
 
-// tests/Repository/TodoRepositoryTest.php
-
 namespace App\Tests\Repository;
 
 use App\Entity\Post;

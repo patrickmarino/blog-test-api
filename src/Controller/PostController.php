@@ -107,7 +107,7 @@ class PostController extends AbstractController
         }
     }
 
-    #[Route("/post/{id}", "delete_todo", methods: ["DELETE"])]
+    #[Route("/post/{id}", "delete_post", methods: ["DELETE"])]
     public function delete($id)
     {
         $this->postRepository->remove($this->postRepository->find($id), true);
