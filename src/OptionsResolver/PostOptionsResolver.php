@@ -6,7 +6,7 @@ namespace App\OptionsResolver;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TodoOptionsResolver extends OptionsResolver
+class PostOptionsResolver extends OptionsResolver
 {
     public function configureTitle(bool $isRequired = true): self
     {
@@ -36,16 +36,6 @@ class TodoOptionsResolver extends OptionsResolver
 
         if($isRequired) {
             $this->setRequired("category_id");
-        }
-
-        return $this;
-    }
-    public function configureCompleted(bool $isRequired = true): self
-    {
-        $this->setDefined("completed")->setAllowedTypes("completed", "bool");
-
-        if($isRequired) {
-            $this->setRequired("completed");
         }
 
         return $this;

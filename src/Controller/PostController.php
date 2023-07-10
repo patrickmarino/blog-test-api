@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\OptionsResolver\PaginatorOptionsResolver;
-use App\OptionsResolver\TodoOptionsResolver;
+use App\OptionsResolver\PostOptionsResolver;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -45,11 +45,11 @@ class PostController extends AbstractController
     }
 
     #[Route("/post", "create_post", methods: ["POST"])]
-    public function store(Request $request, ValidatorInterface $validator, TodoOptionsResolver $todoOptionsResolver): JsonResponse
+    public function store(Request $request, ValidatorInterface $validator, PostOptionsResolver $postOptionsResolver): JsonResponse
     {
         try {
             $requestBody = json_decode($request->getContent(), true);
-            $fields = $todoOptionsResolver->configureTitle(true)
+            $fields = $postOptionsResolver->configureTitle(true)
                 ->configureTitle()
                 ->configureCategoryId()
                 ->configureContent()
@@ -77,12 +77,12 @@ class PostController extends AbstractController
     }
 
     #[Route("/post/{id}", "update_post", methods: ["PATCH", "PUT"])]
-    public function update($id, Request $request, TodoOptionsResolver $todoOptionsResolver, ValidatorInterface $validator, EntityManagerInterface $em): JsonResponse
+    public function update($id, Request $request, PostOptionsResolver $postOptionsResolver, ValidatorInterface $validator, EntityManagerInterface $em): JsonResponse
     {
         try {
             $requestBody = json_decode($request->getContent(), true);
 
-            $fields = $todoOptionsResolver->configureTitle(true)
+            $fields = $postOptionsResolver->configureTitle(true)
                 ->configureTitle()
                 ->configureCategoryId()
                 ->configureContent()

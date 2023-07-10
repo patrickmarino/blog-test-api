@@ -23,7 +23,7 @@ class Post
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTIme $publication_date = null;
+    private ?\DateTime $publication_date = null;
 
     #[ORM\Column]
     private ?int $category_id = null;
@@ -57,12 +57,12 @@ class Post
         return $this;
     }
 
-    public function getPublicationDate(): ?\DateTIme
+    public function getPublicationDate(): ?\DateTime
     {
         return $this->publication_date;
     }
 
-    public function setPublicationDate(\DateTIme $publication_date): static
+    public function setPublicationDate(\DateTime $publication_date): static
     {
         $this->publication_date = $publication_date;
 
